@@ -1,0 +1,39 @@
+# Use a lightweight Alpine Linux base image with OpenJDK 11
+FROM openjdk:11-jre-slim-buster
+
+# Set environment variables for Kafka
+ENV KAFKA_VERSION=3.8.0
+ENV SCALA_VERSION=2.13
+
+# Install necessary tools and dependencies
+RUN apt-get update && apt-get install -y wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Download and extract Kafka binaries
+RUN wget https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
+    && tar -xzf kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
+    && mv kafka_${SCALA_VERSION}-${KAFKA_VERSION} /opt/kafka \
+    && rm kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz
+
+RUN apt-get update && \
+apt-get install -y netcat iputils-ping
+
+# Set working directory
+WORKDIR /opt/kafka
+
+# Copy server.properties with the correct listeners configuration
+COPY server.properties ./config/server.properties
+
+# Set up environment variables for Kafka
+ENV KAFKA_HOME=/opt/kafka
+ENV PATH=$PATH:$KAFKA_HOME/bin
+
+# Copy consumer script
+COPY consumer.sh /opt/kafka/consumer.sh
+
+# Make the consumer script executable
+RUN chmod +x /opt/kafka/consumer.sh
+
+# Define default command to run the consumer script
+CMD ["/opt/kafka/consumer.sh"]

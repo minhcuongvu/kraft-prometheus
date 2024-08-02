@@ -1,0 +1,38 @@
+services:
+  kafka-broker:
+    build:
+      context: ./kafka
+    container_name: kafka-broker
+    hostname: kafka-broker
+    restart: always
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka-broker:9092
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092,
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT
+      - KAFKA_LISTENER_NAME=PLAINTEXT
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+      - "7071:7071"
+    volumes:
+      - kafka-data:/opt/kafka/data
+    networks:
+      - kafka-network
+
+  prometheus:
+    build:
+      context: ./prometheus
+    container_name: prometheus
+    hostname: prometheus
+    restart: always
+    ports:
+    - "9090:9090"
+    networks:
+    - kafka-network
+
+networks:
+  kafka-network:
+    driver: bridge
+
+volumes:
+  kafka-data:
