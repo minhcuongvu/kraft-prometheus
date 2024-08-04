@@ -11,6 +11,7 @@ services:
       - KAFKA_PROCESS_ROLES=controller
       - KAFKA_LISTENERS=CONTROLLER://kafka-controller-1:9092
       - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092
+      - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
       - "7071:7071"
     volumes:
@@ -30,6 +31,7 @@ services:
       - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-1:9092
       - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-1:9092
       - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092
+      - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
       - "7072:7072"
     volumes:
@@ -49,6 +51,7 @@ services:
       - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-2:9092
       - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-2:9092
       - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092
+      - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
       - "7073:7073"
     volumes:
