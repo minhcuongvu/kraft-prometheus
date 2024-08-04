@@ -10,14 +10,53 @@ services:
       - PORT=7071
       - KAFKA_PROCESS_ROLES=controller
       - KAFKA_LISTENERS=CONTROLLER://kafka-controller-1:9092
-      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
       - "7071:7071"
     volumes:
-      - kafka-data-1:/opt/kafka/data
+      - kafka-controller-1-data:/opt/kafka/data
     networks:
       - kafka-network
+  kafka-controller-2:
+    build:
+      context: ./kafka
+    container_name: kafka-controller-2
+    hostname: kafka-controller-2
+    restart: always
+    environment:
+      - NODE_ID=2
+      - PORT=7072
+      - KAFKA_PROCESS_ROLES=controller
+      - KAFKA_LISTENERS=CONTROLLER://kafka-controller-2:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
+      - KAFKA_LOG_DIRS=/opt/kafka/data
+    ports:
+      - "7072:7072"
+    volumes:
+      - kafka-controller-2-data:/opt/kafka/data
+    networks:
+      - kafka-network
+  kafka-controller-3:
+    build:
+      context: ./kafka
+    container_name: kafka-controller-3
+    hostname: kafka-controller-3
+    restart: always
+    environment:
+      - NODE_ID=3
+      - PORT=7073
+      - KAFKA_PROCESS_ROLES=controller
+      - KAFKA_LISTENERS=CONTROLLER://kafka-controller-3:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
+      - KAFKA_LOG_DIRS=/opt/kafka/data
+    ports:
+      - "7073:7073"
+    volumes:
+      - kafka-controller-3-data:/opt/kafka/data
+    networks:
+      - kafka-network
+
   kafka-broker-1:
     build:
       context: ./kafka
@@ -25,17 +64,17 @@ services:
     hostname: kafka-broker-1
     restart: always
     environment:
-      - NODE_ID=2
-      - PORT=7072
+      - NODE_ID=11
+      - PORT=8081
       - KAFKA_PROCESS_ROLES=broker
       - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-1:9092
       - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-1:9092
-      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
-      - "7072:7072"
+      - "8081:8081"
     volumes:
-      - kafka-data-2:/opt/kafka/data
+      - kafka-broker-1-data:/opt/kafka/data
     networks:
       - kafka-network
   kafka-broker-2:
@@ -45,17 +84,97 @@ services:
     hostname: kafka-broker-2
     restart: always
     environment:
-      - NODE_ID=3
-      - PORT=7073
+      - NODE_ID=12
+      - PORT=8082
       - KAFKA_PROCESS_ROLES=broker
       - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-2:9092
       - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-2:9092
-      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
-      - "7073:7073"
+      - "8082:8082"
     volumes:
-      - kafka-data-3:/opt/kafka/data
+      - kafka-broker-2-data:/opt/kafka/data
+    networks:
+      - kafka-network
+  kafka-broker-3:
+    build:
+      context: ./kafka
+    container_name: kafka-broker-3
+    hostname: kafka-broker-3
+    restart: always
+    environment:
+      - NODE_ID=13
+      - PORT=8083
+      - KAFKA_PROCESS_ROLES=broker
+      - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-3:9092
+      - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-3:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
+      - KAFKA_LOG_DIRS=/opt/kafka/data
+    ports:
+      - "8083:8083"
+    volumes:
+      - kafka-broker-3-data:/opt/kafka/data
+    networks:
+      - kafka-network
+  kafka-broker-4:
+    build:
+      context: ./kafka
+    container_name: kafka-broker-4
+    hostname: kafka-broker-4
+    restart: always
+    environment:
+      - NODE_ID=14
+      - PORT=8084
+      - KAFKA_PROCESS_ROLES=broker
+      - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-4:9092
+      - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-4:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
+      - KAFKA_LOG_DIRS=/opt/kafka/data
+    ports:
+      - "8084:8084"
+    volumes:
+      - kafka-broker-4-data:/opt/kafka/data
+    networks:
+      - kafka-network
+  kafka-broker-5:
+    build:
+      context: ./kafka
+    container_name: kafka-broker-5
+    hostname: kafka-broker-5
+    restart: always
+    environment:
+      - NODE_ID=15
+      - PORT=8085
+      - KAFKA_PROCESS_ROLES=broker
+      - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-5:9092
+      - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-5:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
+      - KAFKA_LOG_DIRS=/opt/kafka/data
+    ports:
+      - "8085:8085"
+    volumes:
+      - kafka-broker-5-data:/opt/kafka/data
+    networks:
+      - kafka-network
+  kafka-broker-6:
+    build:
+      context: ./kafka
+    container_name: kafka-broker-6
+    hostname: kafka-broker-6
+    restart: always
+    environment:
+      - NODE_ID=16
+      - PORT=8086
+      - KAFKA_PROCESS_ROLES=broker
+      - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-6:9092
+      - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-6:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
+      - KAFKA_LOG_DIRS=/opt/kafka/data
+    ports:
+      - "8086:8086"
+    volumes:
+      - kafka-broker-6-data:/opt/kafka/data
     networks:
       - kafka-network
 
@@ -75,6 +194,12 @@ networks:
     driver: bridge
 
 volumes:
-  kafka-data-1:
-  kafka-data-2:
-  kafka-data-3:
+  kafka-controller-1-data:
+  kafka-controller-2-data:
+  kafka-controller-3-data:
+  kafka-broker-1-data:
+  kafka-broker-2-data:
+  kafka-broker-3-data:
+  kafka-broker-4-data:
+  kafka-broker-5-data:
+  kafka-broker-6-data:

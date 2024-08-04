@@ -5,4 +5,4 @@ FROM prom/prometheus
 COPY prometheus.yml /etc/prometheus/prometheus.yml
 
 # Expose port 9090
-EXPOSE 9090
+# EXPOSE 9090

@@ -28,4 +28,4 @@ scrape_configs:
 
   - job_name: "kafka"
     static_configs:
-      - targets: ["kafka-controller-1:7071", "kafka-broker-1:7072", "kafka-broker-2:7073"]
+      - targets: ["kafka-controller-1:7071", "kafka-controller-2:7072", "kafka-controller-3:7073", "kafka-broker-1:8081","kafka-broker-2:8082","kafka-broker-3:8083","kafka-broker-4:8084","kafka-broker-5:8085","kafka-broker-6:8086"]
