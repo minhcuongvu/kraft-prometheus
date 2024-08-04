@@ -1,21 +1,58 @@
 services:
-  kafka-broker:
+  kafka-controller-1:
     build:
       context: ./kafka
-    container_name: kafka-broker
-    hostname: kafka-broker
+    container_name: kafka-controller-1
+    hostname: kafka-controller-1
     restart: always
     environment:
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka-broker:9092
-      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092,
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT
-      - KAFKA_LISTENER_NAME=PLAINTEXT
+      - NODE_ID=1
+      - PORT=7071
+      - KAFKA_PROCESS_ROLES=controller
+      - KAFKA_LISTENERS=CONTROLLER://kafka-controller-1:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092
     ports:
-      - "9092:9092"
-      - "9093:9093"
       - "7071:7071"
     volumes:
-      - kafka-data:/opt/kafka/data
+      - kafka-data-1:/opt/kafka/data
+    networks:
+      - kafka-network
+  kafka-broker-1:
+    build:
+      context: ./kafka
+    container_name: kafka-broker-1
+    hostname: kafka-broker-1
+    restart: always
+    environment:
+      - NODE_ID=2
+      - PORT=7072
+      - KAFKA_PROCESS_ROLES=broker
+      - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-1:9092
+      - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-1:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092
+    ports:
+      - "7072:7072"
+    volumes:
+      - kafka-data-2:/opt/kafka/data
+    networks:
+      - kafka-network
+  kafka-broker-2:
+    build:
+      context: ./kafka
+    container_name: kafka-broker-2
+    hostname: kafka-broker-2
+    restart: always
+    environment:
+      - NODE_ID=3
+      - PORT=7073
+      - KAFKA_PROCESS_ROLES=broker
+      - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-2:9092
+      - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-2:9092
+      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092
+    ports:
+      - "7073:7073"
+    volumes:
+      - kafka-data-3:/opt/kafka/data
     networks:
       - kafka-network
 
@@ -35,4 +72,6 @@ networks:
     driver: bridge
 
 volumes:
-  kafka-data:
+  kafka-data-1:
+  kafka-data-2:
+  kafka-data-3:

@@ -6,7 +6,7 @@ ENV KAFKA_VERSION=3.8.0
 ENV SCALA_VERSION=2.13
 
 # Install necessary tools and dependencies
-RUN apt-get update && apt-get install -y wget \
+RUN apt-get update && apt-get install -y wget gettext \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -20,7 +20,7 @@ RUN wget https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSI
 WORKDIR /opt/kafka
 
 # Copy KRaft server.properties with the correct listeners configuration
-COPY server.properties ./config/kraft/server.properties
+COPY server.properties.template ./config/kraft/server.properties.template
 
 # https://github.com/prometheus/jmx_exporter/tree/release-1.0.1/docs
 # https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/1.0.1/jmx_prometheus_javaagent-1.0.1.jar
@@ -37,7 +37,7 @@ COPY entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
 # Expose Kafka ports
-EXPOSE 9092 9093 7071
+# EXPOSE 9092 9093 7071
 
 # Set up environment variables for Kafka
 ENV KAFKA_HOME=/opt/kafka

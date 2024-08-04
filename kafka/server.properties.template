@@ -21,13 +21,15 @@
 ############################# Server Basics #############################
 
 # The role of this server. Setting this puts us in KRaft mode
-process.roles=broker,controller
+# process.roles=broker,controller
+process.roles=${KAFKA_PROCESS_ROLES}
 
 # The node id associated with this instance's roles
-node.id=1
+node.id=${NODE_ID}
 
 # The connect string for the controller quorum
-controller.quorum.voters=1@kafka-broker:9093
+# controller.quorum.voters=${NODE_ID}@${HOSTNAME}:9093
+controller.quorum.voters=${KAFKA_QUORUM_VOTERS}
 
 ############################# Socket Server Settings #############################
 
@@ -39,14 +41,17 @@ controller.quorum.voters=1@kafka-broker:9093
 #     listeners = listener_name://host_name:port
 #   EXAMPLE:
 #     listeners = PLAINTEXT://your.host.name:9092
-listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+# listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+listeners=${KAFKA_LISTENERS}
 
 # Name of listener used for communication between brokers.
 inter.broker.listener.name=PLAINTEXT
 
 # Listener name, hostname and port the broker will advertise to clients.
 # If not set, it uses the value for "listeners".
-advertised.listeners=PLAINTEXT://kafka-broker:9092
+# advertised.listeners=PLAINTEXT://${HOSTNAME}:9092
+# advertised.listeners=${KAFKA_ADVERTISED_LISTENERS}
+${KAFKA_ADVERTISED_LISTENERS}
 
 # A comma-separated list of the names of the listeners used by the controller.
 # If no explicit mapping set in `listener.security.protocol.map`, default will be using PLAINTEXT protocol
