@@ -1,4 +1,10 @@
-# cmd
+# kafka, kraft, docker-compose, k8s
+
+## notes
+
+kafka brokers and controllers need to be in StatefulSet
+
+## cmd
 
 ```sh
 docker build -t localhost:5000/prometheus:latest ./prometheus/
