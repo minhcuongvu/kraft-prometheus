@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-controller-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-controller-1
+  template:
+    metadata:
+      labels:
+        app: kafka-controller-1
+    spec:
+      containers:
+      - name: kafka-controller-1
+        image: localhost:5000/kafka:latest
+        imagePullPolicy: Always
+        env:
+        - name: NODE_ID
+          value: "1"
+        - name: PORT
+          value: "7071"  # Kafka metrics port
+        - name: KAFKA_PROCESS_ROLES
+          value: "controller"
+        - name: KAFKA_LISTENERS
+          value: "CONTROLLER://0.0.0.0:9092"  # Listen on all network interfaces within the pod
+        # - name: KAFKA_ADVERTISED_LISTENERS
+        #   value: "advertised.listeners=CONTROLLER://kafka-controller-1:9092"  # Advertise using the service name
+        - name: KAFKA_QUORUM_VOTERS
+          value: "1@kafka-controller-1:9092"
+          # value: "1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092"
+        - name: KAFKA_LOG_DIRS
+          value: "/opt/kafka/data"
+        ports:
+        - containerPort: 7071
+          name: metrics
+        - containerPort: 9092
+          name: controller
+        volumeMounts:
+        - mountPath: /opt/kafka/data
+          name: kafka-controller-1-storage
+      volumes:
+      - name: kafka-controller-1-storage
+        persistentVolumeClaim:
+          claimName: kafka-controller-1-pvc

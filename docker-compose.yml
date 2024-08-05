@@ -73,6 +73,7 @@ services:
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
       - "8081:8081"
+      - "9081:9092"
     volumes:
       - kafka-broker-1-data:/opt/kafka/data
     networks:
@@ -93,6 +94,7 @@ services:
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
       - "8082:8082"
+      - "9082:9092"
     volumes:
       - kafka-broker-2-data:/opt/kafka/data
     networks:
@@ -113,6 +115,7 @@ services:
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
       - "8083:8083"
+      - "9083:9092"
     volumes:
       - kafka-broker-3-data:/opt/kafka/data
     networks:
