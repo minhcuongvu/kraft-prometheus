@@ -13,11 +13,13 @@ services:
       - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
-      - "7071:7071"
+      - '7071:7071'
     volumes:
       - kafka-controller-1-data:/opt/kafka/data
     networks:
-      - kafka-network
+      # - kafka-network
+      static-network:
+        ipv4_address: 172.20.128.2
   kafka-controller-2:
     build:
       context: ./kafka
@@ -32,11 +34,13 @@ services:
       - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
-      - "7072:7072"
+      - '7072:7072'
     volumes:
       - kafka-controller-2-data:/opt/kafka/data
     networks:
-      - kafka-network
+      # - kafka-network
+      static-network:
+        ipv4_address: 172.20.128.3
   kafka-controller-3:
     build:
       context: ./kafka
@@ -51,11 +55,13 @@ services:
       - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
-      - "7073:7073"
+      - '7073:7073'
     volumes:
       - kafka-controller-3-data:/opt/kafka/data
     networks:
-      - kafka-network
+      # - kafka-network
+      static-network:
+        ipv4_address: 172.20.128.4
 
   kafka-broker-1:
     build:
@@ -72,12 +78,14 @@ services:
       - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
-      - "8081:8081"
-      - "9081:9092"
+      - '8081:8081'
+      - '9081:9092'
     volumes:
       - kafka-broker-1-data:/opt/kafka/data
     networks:
-      - kafka-network
+      # - kafka-network
+      static-network:
+        ipv4_address: 172.20.128.5
   kafka-broker-2:
     build:
       context: ./kafka
@@ -93,12 +101,14 @@ services:
       - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
-      - "8082:8082"
-      - "9082:9092"
+      - '8082:8082'
+      - '9082:9092'
     volumes:
       - kafka-broker-2-data:/opt/kafka/data
     networks:
-      - kafka-network
+      # - kafka-network
+      static-network:
+        ipv4_address: 172.20.128.6
   kafka-broker-3:
     build:
       context: ./kafka
@@ -114,72 +124,14 @@ services:
       - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
       - KAFKA_LOG_DIRS=/opt/kafka/data
     ports:
-      - "8083:8083"
-      - "9083:9092"
+      - '8083:8083'
+      - '9083:9092'
     volumes:
       - kafka-broker-3-data:/opt/kafka/data
     networks:
-      - kafka-network
-  kafka-broker-4:
-    build:
-      context: ./kafka
-    container_name: kafka-broker-4
-    hostname: kafka-broker-4
-    restart: always
-    environment:
-      - NODE_ID=14
-      - PORT=8084
-      - KAFKA_PROCESS_ROLES=broker
-      - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-4:9092
-      - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-4:9092
-      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
-      - KAFKA_LOG_DIRS=/opt/kafka/data
-    ports:
-      - "8084:8084"
-    volumes:
-      - kafka-broker-4-data:/opt/kafka/data
-    networks:
-      - kafka-network
-  kafka-broker-5:
-    build:
-      context: ./kafka
-    container_name: kafka-broker-5
-    hostname: kafka-broker-5
-    restart: always
-    environment:
-      - NODE_ID=15
-      - PORT=8085
-      - KAFKA_PROCESS_ROLES=broker
-      - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-5:9092
-      - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-5:9092
-      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
-      - KAFKA_LOG_DIRS=/opt/kafka/data
-    ports:
-      - "8085:8085"
-    volumes:
-      - kafka-broker-5-data:/opt/kafka/data
-    networks:
-      - kafka-network
-  kafka-broker-6:
-    build:
-      context: ./kafka
-    container_name: kafka-broker-6
-    hostname: kafka-broker-6
-    restart: always
-    environment:
-      - NODE_ID=16
-      - PORT=8086
-      - KAFKA_PROCESS_ROLES=broker
-      - KAFKA_LISTENERS=PLAINTEXT://kafka-broker-6:9092
-      - KAFKA_ADVERTISED_LISTENERS=advertised.listeners=PLAINTEXT://kafka-broker-6:9092
-      - KAFKA_QUORUM_VOTERS=1@kafka-controller-1:9092,2@kafka-controller-2:9092,3@kafka-controller-3:9092
-      - KAFKA_LOG_DIRS=/opt/kafka/data
-    ports:
-      - "8086:8086"
-    volumes:
-      - kafka-broker-6-data:/opt/kafka/data
-    networks:
-      - kafka-network
+      # - kafka-network
+      static-network:
+        ipv4_address: 172.20.128.7
 
   prometheus:
     build:
@@ -188,13 +140,24 @@ services:
     hostname: prometheus
     restart: always
     ports:
-    - "9090:9090"
+      - '9090:9090'
     networks:
-    - kafka-network
+      # - kafka-network
+      static-network:
+        ipv4_address: 172.20.128.8
 
 networks:
-  kafka-network:
-    driver: bridge
+  # kafka-network:
+  #   driver: bridge
+  static-network:
+    # driver: bridge
+    ipam:
+      config:
+        # https://gist.github.com/zainengineer/6722174f6cb68080ae197fc757519f38
+        # we are not actually using this ip
+        # with wsl2, we have to use address from ip route
+        - subnet: 172.20.0.0/16
+          # ip_range: 172.28.5.0/24
 
 volumes:
   kafka-controller-1-data:
@@ -203,6 +166,3 @@ volumes:
   kafka-broker-1-data:
   kafka-broker-2-data:
   kafka-broker-3-data:
-  kafka-broker-4-data:
-  kafka-broker-5-data:
-  kafka-broker-6-data:
