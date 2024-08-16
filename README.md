@@ -1,43 +1,39 @@
 # kafka, kraft, docker-compose, k8s
 
-## notes
-
-kafka brokers and controllers need to be in StatefulSet
-
 ## cmd
 
+### kafka
+
 ```sh
-docker build -t localhost:5000/prometheus:latest ./prometheus/
+docker build -t local.registry.com:32555/kafka:latest ./kafka/
 ```
 
 ```sh
-docker push localhost:5000/prometheus:latest
+docker push local.registry.com:32555/kafka:latest
+```
+
+#### kafka-controller-1
+
+```sh
+kubectl apply -f kafka-controller-1.yaml
+```
+
+#### kafka-broker-1
+
+```sh
+kubectl apply -f kafka-broker-1.yaml
+```
+
+### prometheus
+
+```sh
+docker build -t local.registry.com:32555/prometheus:latest ./prometheus/
 ```
 
 ```sh
-kubectl apply -f prometheus-deployment.yaml
+docker push local.registry.com:32555/prometheus:latest
 ```
 
 ```sh
-kubectl apply -f prometheus-service.yaml
-```
-
-```sh
-kubectl apply -f prometheus-pvc.yaml
-```
-
-```sh
-kubectl rollout status deployment/prometheus
-```
-
-```sh
-kubectl rollout restart deployment prometheus
-```
-
-```sh
-kubectl port-forward service/prometheus 9090:9090 &
-```
-
-```sh
-kubectl get service prometheus -o yaml
+kubectl apply -f prometheus-1.yaml
 ```
