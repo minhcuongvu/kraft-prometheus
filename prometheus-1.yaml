@@ -1,3 +1,4 @@
+# http://prometheus.kafka.svc.cluster.local:9090
 apiVersion: apps/v1
 kind: Deployment
 metadata:
